@@ -42,21 +42,23 @@ export function UserDropdownMenu({
         <DropdownMenuLabel>My Account</DropdownMenuLabel>
         <DropdownMenuGroup>
           <DropdownMenuItem asChild>
-            <Link href={`/@${user.username}`}>
+            <Link href="/profile">
               Profile
               <DropdownMenuShortcut>
                 <User2Icon />
               </DropdownMenuShortcut>
             </Link>
           </DropdownMenuItem>
-          <DropdownMenuItem>
-            Billing
-            <DropdownMenuShortcut>
-              <CreditCard />
-            </DropdownMenuShortcut>
+          <DropdownMenuItem asChild>
+            <Link href="/profile/billing">
+              Billing
+              <DropdownMenuShortcut>
+                <CreditCard />
+              </DropdownMenuShortcut>
+            </Link>
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
-            <Link href={`/@${user.username}/settings`}>
+            <Link href="/profile/settings">
               Settings
               <DropdownMenuShortcut>
                 <Settings2 />

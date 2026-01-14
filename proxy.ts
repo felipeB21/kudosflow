@@ -7,7 +7,7 @@ export async function proxy(request: NextRequest) {
   const sessionToken = request.cookies.get("better-auth.session_token")?.value;
 
   if (!sessionToken) {
-    if (pathname.startsWith("/dashboard")) {
+    if (pathname.startsWith("/p")) {
       return NextResponse.redirect(new URL("/auth", request.url));
     }
     return NextResponse.next();
@@ -17,17 +17,17 @@ export async function proxy(request: NextRequest) {
     headers: request.headers,
   });
 
-  if (!session && pathname.startsWith("/dashboard")) {
+  if (!session && pathname.startsWith("/p")) {
     return NextResponse.redirect(new URL("/auth", request.url));
   }
 
   if (session && pathname === "/auth") {
-    return NextResponse.redirect(new URL("/explore", request.url));
+    return NextResponse.redirect(new URL("/testimonial", request.url));
   }
 
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ["/auth", "/dashboard/:path*"],
+  matcher: ["/auth"],
 };

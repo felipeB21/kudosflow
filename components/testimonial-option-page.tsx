@@ -36,9 +36,8 @@ export default function TestimonialOptionPage() {
             transition={{ duration: 0.4, ease: "easeInOut" }}
             className="flex flex-col items-center gap-4 "
           >
-            {/* Cambiamos el onClick para usar nuestra función de validación */}
             <div onClick={handleCreateClick}>
-              <FlowButton text="Get Testimonials" />
+              <FlowButton text="Get Testimonials" isPending={isPending} />
             </div>
 
             <Button className="rounded-full cursor-pointer w-full" size={"xl"}>

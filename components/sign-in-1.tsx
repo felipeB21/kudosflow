@@ -49,7 +49,6 @@ const AuthForm = React.forwardRef<HTMLDivElement, AuthFormProps>(
     },
     ref
   ) => {
-    // Helper to treat primaryAction always as an array
     const primaryActions = Array.isArray(primaryAction)
       ? primaryAction
       : [primaryAction];

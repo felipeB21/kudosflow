@@ -1,8 +1,7 @@
 "use client";
 
-import { motion, useMotionValue, useTransform, animate } from "framer-motion";
-import { ArrowRight, Circle, PlayCircle } from "lucide-react";
-import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
+import { ArrowRight, Circle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 
@@ -197,9 +196,9 @@ function HeroGeometric({
             variants={fadeUpVariants}
             initial="hidden"
             animate="visible"
-            className="flex justify-center" // Centering logic
+            className="flex justify-center"
           >
-            <Link href="/auth">
+            <Link href="/testimonial">
               <button className="group relative px-8 py-3 rounded-full bg-white text-black font-medium transition-transform hover:scale-105 active:scale-95 flex items-center gap-2">
                 Get Started
                 <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />

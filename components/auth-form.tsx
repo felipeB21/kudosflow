@@ -24,17 +24,13 @@ const IconGithub = (props: React.SVGProps<SVGSVGElement>) => (
 
 const AuthFormDemo = () => {
   const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get("callbackUrl") || "/explore";
+  const callbackUrl = searchParams.get("callbackUrl") || "/testimonial";
   const handleSocialSignIn = async (provider: "google" | "github") => {
     await authClient.signIn.social({
       provider,
       callbackURL: callbackUrl,
       errorCallbackURL: "/auth",
     });
-  };
-
-  const handleAnonymous = async () => {
-    window.location.replace(callbackUrl);
   };
 
   return (
@@ -56,10 +52,6 @@ const AuthFormDemo = () => {
             onClick: () => handleSocialSignIn("github"),
           },
         ]}
-        skipAction={{
-          label: "Skip for now",
-          onClick: () => handleAnonymous(),
-        }}
         footerContent={
           <p className="text-xs text-white/40">
             By logging in, you agree to our{" "}

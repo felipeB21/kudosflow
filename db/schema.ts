@@ -14,6 +14,7 @@ export const testimonialStatusEnum = pgEnum("testimonial_status", [
   "approved",
   "archived",
 ]);
+
 export const subscriptionStatusEnum = pgEnum("subscription_status", [
   "active",
   "canceled",
@@ -97,49 +98,56 @@ export const verification = pgTable(
   (table) => [index("verification_identifier_idx").on(table.identifier)]
 );
 
+export const testimonialLink = pgTable(
+  "testimonial_link",
+  {
+    id: text("id").primaryKey(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+
+    slug: text("slug").notNull().unique(),
+
+    title: text("title").notNull(),
+
+    description: text("description"),
+
+    isActive: boolean("is_active").default(true).notNull(),
+
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at")
+      .defaultNow()
+      .$onUpdate(() => new Date())
+      .notNull(),
+  },
+  (table) => [index("testimonial_link_user_idx").on(table.userId)]
+);
+
 export const testimonial = pgTable(
   "testimonial",
   {
     id: text("id").primaryKey(),
-    userId: text("user_id")
-      .notNull()
-      .references(() => user.id, { onDelete: "cascade" }),
-    customerName: text("customer_name").notNull(),
-    customerRole: text("customer_role"),
-    customerImage: text("customer_image"),
-    content: text("content").notNull(),
-    rating: integer("rating").default(5),
-    status: testimonialStatusEnum("status").default("pending").notNull(),
-    createdAt: timestamp("created_at").defaultNow().notNull(),
-    updatedAt: timestamp("updated_at")
-      .defaultNow()
-      .$onUpdate(() => new Date())
-      .notNull(),
-  },
-  (table) => [index("testimonial_userId_idx").on(table.userId)]
-);
 
-export const projectSetting = pgTable(
-  "project_setting",
-  {
-    id: text("id").primaryKey(),
-    userId: text("user_id")
+    testimonialLinkId: text("testimonial_link_id")
       .notNull()
-      .references(() => user.id, { onDelete: "cascade" }),
-    slug: text("slug").notNull().unique(),
-    title: text("title").default("Send me your testimonial"),
-    description: text("description").default(
-      "Your opinion helps me to keep improving."
-    ),
-    themeColor: text("theme_color").default("#000000"),
-    customDomain: text("custom_domain"),
+      .references(() => testimonialLink.id, { onDelete: "cascade" }),
+
+    customerName: text("customer_name").notNull(),
+    customerRole: text("customer_role").notNull(),
+
+    content: text("content").notNull(),
+
+    rating: integer("rating").notNull(),
+
+    status: testimonialStatusEnum("status").default("pending").notNull(),
+
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at")
       .defaultNow()
       .$onUpdate(() => new Date())
       .notNull(),
   },
-  (table) => [index("project_userId_idx").on(table.userId)]
+  (table) => [index("testimonial_link_idx").on(table.testimonialLinkId)]
 );
 
 export const subscription = pgTable(
@@ -171,17 +179,9 @@ export const subscription = pgTable(
   (table) => [index("subscription_userId_idx").on(table.userId)]
 );
 
-export const userRelations = relations(user, ({ many, one }) => ({
-  sessions: many(session),
-  accounts: many(account),
-  testimonials: many(testimonial),
-  projects: many(projectSetting),
-  subscription: one(subscription, {
-    fields: [user.id],
-    references: [subscription.userId],
-  }),
+export const userRelations = relations(user, ({ many }) => ({
+  testimonialLinks: many(testimonialLink),
 }));
-
 export const subscriptionRelations = relations(subscription, ({ one }) => ({
   user: one(user, {
     fields: [subscription.userId],
@@ -204,15 +204,15 @@ export const accountRelations = relations(account, ({ one }) => ({
 }));
 
 export const testimonialRelations = relations(testimonial, ({ one }) => ({
-  user: one(user, {
-    fields: [testimonial.userId],
-    references: [user.id],
+  testimonialLink: one(testimonialLink, {
+    fields: [testimonial.testimonialLinkId],
+    references: [testimonialLink.id],
   }),
 }));
 
-export const projectSettingRelations = relations(projectSetting, ({ one }) => ({
-  user: one(user, {
-    fields: [projectSetting.userId],
-    references: [user.id],
-  }),
-}));
+export const testimonialLinkRelations = relations(
+  testimonialLink,
+  ({ many }) => ({
+    testimonials: many(testimonial),
+  })
+);
